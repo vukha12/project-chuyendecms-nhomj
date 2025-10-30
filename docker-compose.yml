@@ -23,7 +23,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - ./wordpress_src:/var/www/html
     restart: always
