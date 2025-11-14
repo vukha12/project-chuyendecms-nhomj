@@ -23,7 +23,7 @@ services:
     depends_on:
       - db
     ports:
-      - "80:80"
+      - "9876:80"
     volumes:
       - ./wordpress_src:/var/www/html
     restart: always
@@ -42,7 +42,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8081:80"
+      - "8989:80"
     restart: always
     environment:
       PMA_HOST: db
