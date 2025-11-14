@@ -3,46 +3,39 @@ version: "3.8"
 services:
   # Dịch vụ Database (MySQL)
   db:
-    image: mysql:8.0
+    image: mysql:8.0.37
     volumes:
       - db_data:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: wordpress_db
-      MYSQL_USER: wordpress_user
-      MYSQL_PASSWORD: wordpress_pw
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - wordpress_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Dịch vụ WordPress
   wordpress:
-    image: wordpress:latest
+    image: wordpress:6.6.1-php8.2-apache
     depends_on:
-      - db
-    ports:
-      - "9876:80"
+      db:
+        condition: service_healthy
+    expose:
+      - "80" 
     volumes:
-      - ./wordpress_src:/var/www/html
+      - wordpress_files:/var/www/html
     restart: always
     environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpress_db
-      WORDPRESS_DB_USER: wordpress_user
-      WORDPRESS_DB_PASSWORD: wordpress_pw
-    networks:
-      - wordpress_net
-
-  # Dịch vụ phpMyAdmin
-  phpmyadmin:
-    image: phpmyadmin:latest
-    depends_on:
-      - db
-    ports:
-      - "8989:80"
-    restart: always
-    environment:
-      PMA_HOST: db
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - wordpress_net
 
