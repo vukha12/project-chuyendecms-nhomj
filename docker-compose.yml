@@ -16,6 +16,9 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_HOME', 'http://' . $_SERVER['HTTP_HOST']);
         define('WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST']);
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+            $_SERVER['HTTPS'] = 'on';
+        }
     networks:
       - wordpress_net
 
