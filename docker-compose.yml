@@ -1,38 +1,15 @@
 version: "3.8"
 
 services:
-  # Dịch vụ Database (MySQL)
-  db:
-    image: mysql:8.0.37
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    networks:
-      - wordpress_net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # Dịch vụ WordPress
   wordpress:
     image: wordpress:6.6.1-php8.2-apache
-    depends_on:
-      db:
-        condition: service_healthy
     expose:
-      - "80" 
+      - "80"
     volumes:
       - wordpress_files:/var/www/html
     restart: always
     environment:
-      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_HOST: ${MYSQL_HOST}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
@@ -40,7 +17,6 @@ services:
       - wordpress_net
 
 volumes:
-  db_data:
   wordpress_files:
 
 networks:
