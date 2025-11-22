@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  # Dịch vụ Database (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: wordpress_db_project
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: wordpress_db
+      MYSQL_USER: wordpress_user
+      MYSQL_PASSWORD: wordpress_pw
+    networks:
+      - wordpress_net
+
+  # Dịch vụ WordPress
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app_project
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    volumes:
+      - ./wordpress_src:/var/www/html
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress_db
+      WORDPRESS_DB_USER: wordpress_user
+      WORDPRESS_DB_PASSWORD: wordpress_pw
+    networks:
+      - wordpress_net
+
+  # Dịch vụ phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: wordpress_pma_project
+    depends_on:
+      - db
+    ports:
+      - "8081:80"
+    restart: always
+    environment:
+      PMA_HOST: db
+    networks:
+      - wordpress_net
+
+volumes:
+  db_data:
+  wordpress_files:
+
+networks:
+  wordpress_net:
+    driver: bridge
