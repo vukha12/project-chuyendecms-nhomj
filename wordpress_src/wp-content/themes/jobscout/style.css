@@ -1120,8 +1120,8 @@ body.custom-background .site {
 
 a.btn {
   display: inline-block;
-  background: #2ace5e;
-  border: 1px solid #2ace5e;
+  background: #d4a373;
+  border: 1px solid #d4a373;
   color: #fff;
   font-weight: 700;
 
@@ -1133,7 +1133,7 @@ a.btn {
 a.btn:hover,
 a.btn:focus {
   background: none;
-  color: #2ace5e;
+  color: #d4a373;
 }
 
 a.btn:focus {
@@ -8995,3 +8995,46 @@ h2.entry-title a {
 /* View More Jobs Button */
 
 /* End View More Jobs Button */
+
+/* Header Customization */
+.header-t {
+  display: none !important;
+}
+
+.header-main .container {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 0 !important;
+  padding: 0 60px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.site-branding .site-title a,
+.site-title a {
+  color: #333333 !important;
+  font-weight: 500 !important;
+}
+
+.main-navigation ul li a {
+  text-transform: uppercase !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+  padding-bottom: 10px;
+}
+
+.main-navigation ul li a:hover {
+  color: #000 !important;
+}
+.main-navigation ul li.current-menu-item > a,
+.main-navigation ul li.current_page_item > a {
+  color: #000000 !important;
+  border-bottom: 3px solid #e67e22 !important;
+}
+.site-header-main {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+  border-bottom: 1px solid #eee;
+}
