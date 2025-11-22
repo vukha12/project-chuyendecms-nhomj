@@ -916,7 +916,7 @@ a:hover {
 # Widgets
 --------------------------------------------------------------*/
 .widget {
-  margin: 0 0 60px 0;
+  /* margin: 0 0 60px 0; */
   /* Make sure select elements fit in widgets. */
 }
 
@@ -3090,7 +3090,7 @@ section.client-section {
 SITE FOOTER SECTION
 ==========================*/
 .footer-t {
-  background: #000;
+  /* background: #000; */
   padding-top: 60px;
 }
 
@@ -9037,4 +9037,188 @@ h2.entry-title a {
   padding-top: 15px !important;
   padding-bottom: 15px !important;
   border-bottom: 1px solid #eee;
+}
+
+/* =========================================================
+   1. RESET BỐ CỤC (QUAN TRỌNG NHẤT)
+   ========================================================= */
+/* Phá bỏ cấu trúc chia cột, ép các phần tử xếp chồng lên nhau */
+.footer-t .container {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+.footer-t .grid.column-4 {
+  display: flex !important;
+  flex-direction: column !important; /* Xếp dọc thay vì ngang */
+  gap: 0 !important;
+}
+
+.footer-t .col {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/* =========================================================
+   2. PHẦN NEWSLETTER (THANH CAM)
+   ========================================================= */
+/* 1. Căn chỉnh khung chính */
+.custom-newsletter-wrap {
+  background-color: #e67e22 !important; /* Màu cam */
+  padding: 40px 15px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 30px !important; /* Khoảng cách giữa chữ và form */
+}
+
+/* 2. Sửa tiêu đề thành 2 dòng */
+.custom-newsletter-wrap h3 {
+  color: #fff !important;
+  font-size: 26px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+
+  /* Mẹo ép xuống dòng giống hình */
+  max-width: 200px !important;
+  width: 100% !important;
+}
+
+/* 3. Reset khung bao input (Loại bỏ nền trắng cũ) */
+.custom-newsletter-wrap .input-group {
+  background-color: transparent !important; /* Nền trong suốt */
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important; /* Icon và Input dính liền */
+}
+
+/* 4. Tạo khối trắng cho Icon + Ô nhập liệu */
+/* Icon */
+.custom-newsletter-wrap .icon {
+  background-color: #ffffff !important;
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 15px !important;
+  padding-right: 10px !important;
+  color: #e67e22 !important; /* Icon màu cam */
+}
+
+/* Ô nhập liệu (Input) */
+.custom-newsletter-wrap input[type="email"] {
+  background-color: #ffffff !important;
+  height: 50px !important;
+  border: none !important;
+  outline: none !important;
+  min-width: 300px !important; /* Độ dài ô nhập */
+  padding: 0 !important;
+  color: #555 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* 5. Tách nút SUBSCRIBE ra riêng (Viền trắng, nền cam) */
+.custom-newsletter-wrap button {
+  background-color: transparent !important; /* Nền trong suốt để lộ màu cam phía sau */
+  border: 1px solid #ffffff !important; /* Viền trắng */
+  color: #ffffff !important;
+  height: 50px !important;
+  padding: 0 30px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  margin-left: 20px !important; /* Tách nút ra khỏi ô nhập liệu */
+  border-radius: 0 !important; /* Vuông góc */
+  cursor: pointer;
+}
+
+/* Hiệu ứng khi di chuột vào nút */
+.custom-newsletter-wrap button:hover {
+  background-color: #fff !important;
+  color: #e67e22 !important;
+}
+
+/* Responsive trên Mobile (để không bị vỡ) */
+@media (max-width: 768px) {
+  .custom-newsletter-wrap {
+    flex-direction: column;
+    text-align: center;
+  }
+  .custom-newsletter-wrap h3 {
+    text-align: center !important;
+    max-width: 100% !important;
+  }
+  .custom-newsletter-wrap .input-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 15px !important;
+  }
+  .custom-newsletter-wrap input[type="email"],
+  .custom-newsletter-wrap .icon {
+    width: 100% !important;
+  }
+  .custom-newsletter-wrap button {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* =========================================================
+   3. PHẦN FOOTER CHÍNH (NỀN TRẮNG)
+   ========================================================= */
+
+/* Tên Website (WordPress 581) */
+.footer-site-title {
+  text-align: center !important;
+  font-size: 32px !important;
+  color: #000 !important;
+  margin-top: 50px !important;
+  margin-bottom: 20px !important;
+  display: block !important;
+}
+
+/* Ẩn tiêu đề "Nav" thừa */
+.widget_nav_menu h2.widget-title {
+  display: none !important;
+}
+
+/* Menu Footer */
+#menu-secondary {
+  display: flex !important;
+  justify-content: center !important;
+  list-style: none !important;
+  padding: 0 !important;
+  /* margin: 0 0 30px 0 !important; */
+  gap: 25px !important;
+  flex-wrap: wrap !important;
+}
+
+#menu-secondary li a {
+  color: #000 !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+}
+
+#menu-secondary li a:hover {
+  color: #e67e22 !important;
+}
+
+/* Social Icons (Block Social Links) */
+.wp-block-social-links {
+  display: flex !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin-bottom: 50px !important;
+  list-style: none !important;
+  gap: 15px !important;
+}
+
+.wp-block-social-links li a {
+  text-decoration: none !important;
 }
