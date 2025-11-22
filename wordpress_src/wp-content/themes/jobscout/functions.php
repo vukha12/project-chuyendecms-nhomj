@@ -86,3 +86,12 @@ if( jobscout_is_woocommerce_activated() ){
 if( jobscout_is_wp_job_manager_activated() ) :
 	require get_template_directory() . '/inc/wp-job-manager-filters.php';
 endif;
+
+add_filter( 'gettext', 'change_wpjm_load_more_text', 20, 3 );
+function change_wpjm_load_more_text( $translated_text, $text, $domain ) {
+    // Kiểm tra đúng text gốc và đúng plugin
+    if ( $text === 'Load more listings' && $domain === 'wp-job-manager' ) {
+        $translated_text = 'VIEW MORE JOBS';
+    }
+    return $translated_text;
+}
