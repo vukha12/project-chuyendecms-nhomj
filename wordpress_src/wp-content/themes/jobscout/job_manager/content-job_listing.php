@@ -23,11 +23,12 @@ if ( ! empty( $raw_location ) && strpos( $raw_location, ',' ) !== false ) {
 ?>
 <article class="job-cards" <?php job_listing_class(); ?> data-longitude="<?php echo esc_attr( $post->geolocation_lat ); ?>" data-latitude="<?php echo esc_attr( $post->geolocation_long ); ?>">
 
-    <figure class="company-logo">
-        <?php the_company_logo( 'thumbnail' ); ?>
-    </figure>
+    <div class="job-card-head">
+        <figure class="company-logo">
+            <?php the_company_logo( 'thumbnail' ); ?>
+        </figure>
 
-    <div class="job-title-wrap">
+        <div class="job-title-wrap">
         
         <h2 class="entry-title">
             <a href="<?php the_job_permalink(); ?>"><?php wpjm_the_job_title(); ?></a>
@@ -64,6 +65,7 @@ if ( ! empty( $raw_location ) && strpos( $raw_location, ',' ) !== false ) {
         </div>
         
         
+        </div>
     </div>
 	<div class="entry-content-desc">
 		<?php echo wp_kses_post( get_the_excerpt() ); ?>
