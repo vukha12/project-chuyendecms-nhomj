@@ -16,7 +16,7 @@ $ed_blog      = get_theme_mod( 'ed_blog', true );
 $args = array(
     'post_type'           => 'post',
     'post_status'         => 'publish',
-    'posts_per_page'      => 3,
+    'posts_per_page'      => 4,
     'ignore_sticky_posts' => true
 );
 
@@ -31,39 +31,39 @@ if( $ed_blog && ( $blog_heading || $sub_title || $qry->have_posts() ) ){ ?>
         ?>
         
         <?php if( $qry->have_posts() ){ ?>
-           <div class="article-wrap">
-    			<?php 
-                while( $qry->have_posts() ){
-                    $qry->the_post(); ?>
-                    <article class="post">
-        				<figure class="post-thumbnail">
-                            <a href="<?php the_permalink(); ?>" class="post-thumbnail">
-                            <?php 
-                                if( has_post_thumbnail() ){
-                                    the_post_thumbnail( 'jobscout-blog', array( 'itemprop' => 'image' ) );
-                                }else{ 
-                                    jobscout_fallback_svg_image( 'jobscout-blog' ); 
-                                }                            
-                            ?>                        
-                            </a>
-                        </figure>
-                        <header class="entry-header">
-                            <div class="entry-meta">
-                                <?php 
-                                    if( ! $hide_author ) jobscout_posted_by(); 
-                                    if( ! $hide_date ) jobscout_posted_on();
-                                ?> 
-                            </div>
-                            <h3 class="entry-title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h3>
-                        </header>
-        			</article>			
-        			<?php 
-                }
-                wp_reset_postdata();
-                ?>
-    		</div><!-- .article-wrap -->
+		   <div class="article-wrap blog-grid">
+			<?php 
+			while( $qry->have_posts() ){
+				$qry->the_post(); ?>
+				<article class="custom-blog-card">
+					<div class="custom-blog-inner">
+						<div class="custom-thumb">
+							<a href="<?php the_permalink(); ?>">
+								<?php 
+									if( has_post_thumbnail() ){
+										the_post_thumbnail( 'jobscout-blog', array( 'itemprop' => 'image' ) );
+									}else{ 
+										jobscout_fallback_svg_image( 'jobscout-blog' ); 
+									}                            
+								?>
+							</a>
+						</div>
+						<div class="custom-blog-content">
+							<h3 class="entry-title">
+								<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+							</h3>
+							<div class="entry-excerpt">
+								<?php the_excerpt(); ?>
+							</div>
+							<a class="custom-read-more" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read More', 'jobscout' ); ?></a>
+						</div>
+					</div>
+				</article>
+			<?php 
+			}
+			wp_reset_postdata();
+			?>
+		   </div><!-- .article-wrap -->
     		
             <?php if( $blog && $label ){ ?>
                 <div class="btn-wrap">
