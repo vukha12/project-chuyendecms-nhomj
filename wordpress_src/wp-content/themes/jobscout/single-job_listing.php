@@ -666,7 +666,6 @@ while (have_posts()) : the_post();
             padding: 12px 35px;
             font-size: 14px;
             font-weight: 600;
-            border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
@@ -676,24 +675,14 @@ while (have_posts()) : the_post();
 
         .btn-share {
             background: transparent;
-            border: 2px solid #333;
+            border: 1px solid #333;
             color: #333;
-        }
-
-        .btn-share:hover {
-            background: #333;
-            color: #fff;
         }
 
         .btn-apply {
             background: transparent;
-            border: 2px solid #ff6b35;
+            border: 1px solid #ff6b35;
             color: #ff6b35;
-        }
-
-        .btn-apply:hover {
-            background: #ff6b35;
-            color: #fff;
         }
 
         /* Job Content with Sidebar */
