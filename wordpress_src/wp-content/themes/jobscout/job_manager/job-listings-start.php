@@ -15,4 +15,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 ?>
-<div class="job_listings grid-2-columns">
+<div class="job_listings">

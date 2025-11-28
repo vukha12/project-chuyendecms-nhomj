@@ -87,11 +87,99 @@ if( jobscout_is_wp_job_manager_activated() ) :
 	require get_template_directory() . '/inc/wp-job-manager-filters.php';
 endif;
 
-add_filter( 'gettext', 'change_wpjm_load_more_text', 20, 3 );
-function change_wpjm_load_more_text( $translated_text, $text, $domain ) {
-    // Kiểm tra đúng text gốc và đúng plugin
-    if ( $text === 'Load more listings' && $domain === 'wp-job-manager' ) {
-        $translated_text = 'VIEW MORE JOBS';
-    }
-    return $translated_text;
+register_sidebar(array(
+    'name'          => 'Footer Social Sidebar',
+    'id'            => 'footer-social-sidebar',
+    'before_widget' => '<div class="footer-social-widget">',
+    'after_widget'  => '</div>',
+));
+
+
+function news_banner_customizer( $wp_customize ) {
+
+    // Thêm panel riêng cho Banner
+    $wp_customize->add_panel( 'custom_page_banner', array(
+        'title'       => __( 'Page Banners', 'jobscout' ),
+        'description' => 'Customize banners for each page',
+        'priority'    => 200,
+    ));
+
+    // Thêm section cho News Page
+    $wp_customize->add_section( 'news_page_banner_section', array(
+        'title'    => __( 'News Page Banner', 'jobscout' ),
+        'panel'    => 'custom_page_banner',
+        'priority' => 10,
+    ));
+
+    // Banner Title
+    $wp_customize->add_setting( 'news_banner_title', array(
+        'default'           => 'Latest News',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control( 'news_banner_title', array(
+        'label'   => __( 'Banner Title', 'jobscout' ),
+        'section' => 'news_page_banner_section',
+        'type'    => 'text',
+    ));
+
+    // Banner Subtitle
+    $wp_customize->add_setting( 'news_banner_subtitle', array(
+        'default'           => 'Stay updated with the latest news.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control( 'news_banner_subtitle', array(
+        'label'   => __( 'Banner Subtitle', 'jobscout' ),
+        'section' => 'news_page_banner_section',
+        'type'    => 'text',
+    ));
+
+    // Banner Image
+    $wp_customize->add_setting( 'news_banner_image', array(
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'news_banner_image', array(
+        'label'   => __( 'Banner Image', 'jobscout' ),
+        'section' => 'news_page_banner_section',
+    )));
+
+    $wp_customize->add_section( 'job_page_banner_section', array(
+        'title'    => __( 'Job Page Banner', 'jobscout' ),
+        'panel'    => 'custom_page_banner',
+        'priority' => 20,
+    ));
+
+    // Title
+    $wp_customize->add_setting( 'job_banner_title', array(
+        'default'           => 'Find Your Dream Job',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control( 'job_banner_title', array(
+        'label'   => __( 'Banner Title', 'jobscout' ),
+        'section' => 'job_page_banner_section',
+        'type'    => 'text',
+    ));
+
+    // Subtitle
+    $wp_customize->add_setting( 'job_banner_subtitle', array(
+        'default'           => 'Explore the best job opportunities.',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+    $wp_customize->add_control( 'job_banner_subtitle', array(
+        'label'   => __( 'Banner Subtitle', 'jobscout' ),
+        'section' => 'job_page_banner_section',
+        'type'    => 'text',
+    ));
+
+    // Image
+    $wp_customize->add_setting( 'job_banner_image', array(
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'job_banner_image', array(
+        'label'   => __( 'Banner Image', 'jobscout' ),
+        'section' => 'job_page_banner_section',
+    )));
 }
+
+add_action( 'customize_register', 'news_banner_customizer' );
