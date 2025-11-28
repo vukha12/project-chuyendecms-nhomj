@@ -206,16 +206,16 @@ while (have_posts()) : the_post();
             </div>
         </div>
     </div>
+
     <!-- Other Jobs Section -->
     <div class="other-jobs-section">
         <h2 class="other-jobs-title">Other Jobs</h2>
 
         <div class="other-jobs-grid">
             <?php
-            // Lấy category của job hiện tại
+            // Lấy category của job hiện tại để query các job liên quan
             $current_job_id = get_the_ID();
             $terms = get_the_terms($current_job_id, 'job_listing_category');
-
             $category_ids = [];
             if ($terms && ! is_wp_error($terms)) {
                 foreach ($terms as $term) {
@@ -223,10 +223,9 @@ while (have_posts()) : the_post();
                 }
             }
 
-            // Query các job khác
             $args = [
                 'post_type'      => 'job_listing',
-                'posts_per_page' => 4,
+                'posts_per_page' => 8,
                 'post__not_in'   => [$current_job_id],
                 'orderby'        => 'date',
                 'order'          => 'DESC',
@@ -247,33 +246,58 @@ while (have_posts()) : the_post();
             if ($other_jobs->have_posts()) :
                 while ($other_jobs->have_posts()) : $other_jobs->the_post();
                     $company_logo = get_the_company_logo(get_the_ID(), 'thumbnail');
+                    $company_name = get_post_meta(get_the_ID(), '_company_name', true); // Lấy tên công ty
                     $job_location = get_the_job_location();
-                    $job_type = wpjm_get_the_job_types();
+                    $job_types    = wpjm_get_the_job_types();
+                    $job_type     = !empty($job_types) ? $job_types[0]->name : '';
+                    $created_date = get_the_date('M d, Y'); // Lấy ngày tạo
+
+                    // Lấy 1 category tên để hiển thị
+                    $cats = get_the_terms(get_the_ID(), 'job_listing_category');
+                    $cat_name = ($cats && !is_wp_error($cats)) ? $cats[0]->name : '';
             ?>
                     <div class="other-job-card">
                         <a href="<?php the_permalink(); ?>" class="other-job-link">
-                            <div class="other-job-header">
-                                <?php if ($company_logo) : ?>
-                                    <img src="<?php echo esc_url($company_logo); ?>" alt="" class="other-job-logo">
-                                <?php else : ?>
-                                    <div class="other-job-logo placeholder">Logo</div>
-                                <?php endif; ?>
+                            <div class="other-job-top">
+                                <div class="other-job-logo-wrapper">
+                                    <?php if ($company_logo) : ?>
+                                        <img src="<?php echo esc_url($company_logo); ?>" alt="" class="other-job-logo">
+                                    <?php else : ?>
+                                        <div class="other-job-logo placeholder"><?php echo mb_substr(get_the_title(), 0, 1); ?></div>
+                                    <?php endif; ?>
+                                </div>
 
                                 <div class="other-job-info">
                                     <h3 class="other-job-title"><?php the_title(); ?></h3>
 
-                                    <?php if (! empty($job_type)) : ?>
-                                        <span class="other-job-type">
-                                            <?php echo esc_html($job_type[0]->name); ?>
-                                        </span>
-                                    <?php endif; ?>
+                                    <div class="other-job-meta">
+                                        <?php if ($company_name): ?>
+                                            <span class="meta-company"><?php echo esc_html($company_name); ?></span>
+                                        <?php endif; ?>
+                                        <span class="meta-date">- Created: <?php echo esc_html($created_date); ?></span>
+                                    </div>
 
-                                    <?php if ($job_location) : ?>
-                                        <span class="other-job-location">
-                                            <?php echo esc_html($job_location); ?>
-                                        </span>
-                                    <?php endif; ?>
+                                    <div class="other-job-tags-row">
+                                        <?php if ($job_type) : ?>
+                                            <span class="oj-tag"><?php echo esc_html($job_type); ?></span>
+                                        <?php endif; ?>
+
+                                        <?php if ($cat_name) : ?>
+                                            <span class="oj-tag"><?php echo esc_html($cat_name); ?></span>
+                                        <?php endif; ?>
+
+                                        <?php if ($job_location) : ?>
+                                            <span class="oj-tag"><?php echo esc_html($job_location); ?></span>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div class="other-job-desc">
+                                <?php
+                                // Lấy mô tả ngắn, cắt 15 từ
+                                echo wp_trim_words(get_the_content(), 15, '...');
+                                ?>
                             </div>
                         </a>
                     </div>
@@ -289,90 +313,184 @@ while (have_posts()) : the_post();
 
 
     <style>
-        /* OTHER JOBS Section */
+        /* Container chính */
         .other-jobs-section {
-            margin-top: 50px;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+            background: transparent;
+            /* Nền trong suốt để lộ màu xám của trang */
         }
 
         .other-jobs-title {
             text-align: center;
-            font-size: 42px;
-            font-weight: 700;
-            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 800;
+            /* Chữ đậm */
+            text-transform: uppercase;
+            margin-bottom: 30px;
             color: #333;
+            letter-spacing: 1px;
         }
 
+        /* Lưới 2 cột */
         .other-jobs-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
+            gap: 30px;
         }
 
+        /* Thẻ Job Card */
         .other-job-card {
-            border: 1px solid #eee;
-            padding: 20px;
-            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            padding: 25px;
             transition: all 0.3s ease;
-            background: #fafafa;
+            display: flex;
+            flex-direction: column;
         }
 
         .other-job-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-color: #ccc;
         }
 
         .other-job-link {
             text-decoration: none;
             color: inherit;
+            display: block;
         }
 
-        .other-job-header {
+        /* --- Phần Trên: Logo + Info --- */
+        .other-job-top {
             display: flex;
-            gap: 15px;
-            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
         }
 
-        .other-job-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 6px;
+        /* Logo vuông có viền */
+        .other-job-logo-wrapper {
+            flex-shrink: 0;
+        }
+
+        .other-job-logo,
+        .other-job-logo.placeholder {
+            width: 80px;
+            height: 80px;
             object-fit: contain;
-            border: 1px solid #e5e5e5;
+            border: 1px solid #eee;
+            padding: 5px;
             background: #fff;
+            display: block;
         }
 
         .other-job-logo.placeholder {
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 12px;
-            color: #999;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ccc;
+            background: #f9f9f9;
         }
 
-        .other-job-info .other-job-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin: 0 0 5px;
+        /* Thông tin bên phải logo */
+        .other-job-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .other-job-type,
-        .other-job-location {
-            display: inline-block;
+        .other-job-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 5px 0;
+            color: #000;
+            line-height: 1.3;
+        }
+
+        .other-job-meta {
             font-size: 13px;
-            margin-right: 8px;
-            color: #777;
+            color: #666;
+            margin-bottom: 10px;
+            font-style: italic;
         }
 
-        /* Responsive */
+        .meta-company {
+            font-weight: 600;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        /* Dòng Tags màu xám (Fulltime | Category | Location) */
+        .other-job-tags-row {
+            background: #f5f5f5;
+            /* Nền xám nhạt */
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+            /* Khoảng cách xử lý bằng padding */
+            width: fit-content;
+        }
+
+        .oj-tag {
+            font-size: 12px;
+            color: #555;
+            position: relative;
+            padding: 0 10px;
+            font-weight: 500;
+        }
+
+        /* Tạo đường gạch ngăn cách giữa các tag */
+        .oj-tag:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 12px;
+            background-color: #ccc;
+        }
+
+        .oj-tag:first-child {
+            padding-left: 0;
+        }
+
+        /* --- Phần Dưới: Mô tả --- */
+        .other-job-desc {
+            border-top: 1px solid #f0f0f0;
+            /* Gạch ngang mờ ngăn cách */
+            padding-top: 15px;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        /* Giả lập dấu chấm đầu dòng cho mô tả */
+        .other-job-desc::before {
+            content: "• ";
+            color: #999;
+            margin-right: 5px;
+        }
+
+        /* Responsive cho mobile */
         @media (max-width: 768px) {
             .other-jobs-grid {
                 grid-template-columns: 1fr;
+                /* 1 cột trên mobile */
+            }
+
+            .other-job-top {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
+
+        /* End OTHER JOBS */
 
         .entry-header {
             display: none;
