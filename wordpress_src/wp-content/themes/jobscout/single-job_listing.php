@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The template for displaying all single job posts.
  *
@@ -6,591 +7,767 @@
  *
  * @package JobScout
  */
-get_header(); 
+get_header();
 
 if (function_exists('yoast_breadcrumb')) {
     yoast_breadcrumb('<p id="breadcrumbs">', '</p>');
 }
 
-while ( have_posts() ) : the_post();
+while (have_posts()) : the_post();
     global $post;
-    
+
     // Get job meta data
-    $company_name = get_post_meta( get_the_ID(), '_company_name', true );
-    $company_logo_url = get_the_company_logo( get_the_ID(), 'full' );
+    $company_name = get_post_meta(get_the_ID(), '_company_name', true);
+    $company_logo_url = get_the_company_logo(get_the_ID(), 'full');
     $job_location = get_the_job_location();
-    $created_date = get_the_date( 'M d, Y' );
-    
+    $created_date = get_the_date('M d, Y');
+
     // Get job categories
-    $job_categories = get_the_terms( get_the_ID(), 'job_listing_category' );
+    $job_categories = get_the_terms(get_the_ID(), 'job_listing_category');
     $job_category_name = '';
-    if ( $job_categories && ! is_wp_error( $job_categories ) ) {
+    if ($job_categories && ! is_wp_error($job_categories)) {
         $job_category_name = $job_categories[0]->name;
     }
-    
+
     // Get job types
     $job_types = wpjm_get_the_job_types();
     $job_type_name = '';
-    if ( ! empty( $job_types ) ) {
+    if (! empty($job_types)) {
         $job_type_name = $job_types[0]->name;
     }
-    
+
     // Get company rating (you can customize this)
-    $company_rating = get_post_meta( get_the_ID(), '_company_rating', true );
-    if ( empty( $company_rating ) ) {
+    $company_rating = get_post_meta(get_the_ID(), '_company_rating', true);
+    if (empty($company_rating)) {
         $company_rating = 4.0; // Default rating
     }
-    
+
     // Get company photos (you can customize this)
-    $company_photos = get_post_meta( get_the_ID(), '_company_photos', true );
+    $company_photos = get_post_meta(get_the_ID(), '_company_photos', true);
 ?>
 
-<div id="job-detail-page" class="job-detail-page">
-    <div class="container">
-        <!-- Breadcrumb Navigation -->
-        <nav class="job-breadcrumb">
-            <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="breadcrumb-link">Home</a>
-            <span class="breadcrumb-separator">/</span>
-            <a href="<?php echo esc_url( home_url( '/jobs' ) ); ?>" class="breadcrumb-link">All Jobs</a>
-            <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current"><?php the_title(); ?></span>
-        </nav>
-        
-        <!-- Job Header -->
-        <div class="job-header-card">
-            <div class="job-header-content">
-                <figure class="company-logo-large">
-                    <?php if ( $company_logo_url ) : ?>
-                        <img src="<?php echo esc_url( $company_logo_url ); ?>" alt="<?php echo esc_attr( $company_name ); ?>" />
-                    <?php else : ?>
-                        <div class="company-logo-fallback">
-                            <?php if ( $company_name ) : ?>
-                                <div class="company-name-in-logo"><?php echo esc_html( $company_name ); ?></div>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
-                </figure>
-                
-                <div class="job-header-info">
-                    <h1 class="job-title"><?php the_title(); ?></h1>
-                    <div class="job-meta-info">
-                        <span class="created-date">Created: <?php echo esc_html( $created_date ); ?></span>
-                    </div>
-                    <div class="job-tags">
-                        <?php if ( $job_type_name ) : ?>
-                            <span class="job-tag job-type"><?php echo esc_html( $job_type_name ); ?></span>
-                        <?php endif; ?>
-                        <?php if ( $job_category_name ) : ?>
-                            <span class="job-tag job-category"><?php echo esc_html( $job_category_name ); ?></span>
-                        <?php endif; ?>
-                        <?php if ( $job_location ) : ?>
-                            <span class="job-tag job-location"><?php echo esc_html( $job_location ); ?></span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="job-header-actions">
-                <button class="btn-share">SHARE</button>
-                <button class="btn-apply">APPLY JOB</button>
-            </div>
-        </div>
-        
-        <!-- Job Content with Sidebar -->
-        <div class="job-content-wrapper">
-            <!-- Main Content -->
-            <div class="job-main-content">
-                <section class="job-section">
-                    <h2 class="section-title">Overview about Company</h2>
-                    <div class="section-content">
-                        <?php 
-                        $content = get_the_content();
-                        if ( ! empty( $content ) ) {
-                            echo wpautop( $content );
-                        } else {
-                            echo '<p>No company overview available.</p>';
-                        }
-                        ?>
-                    </div>
-                </section>
-                
-                <section class="job-section">
-                    <h2 class="section-title">Our Key Skills</h2>
-                    <div class="section-content">
-                        <?php 
-                        $key_skills = get_post_meta( get_the_ID(), '_key_skills', true );
-                        if ( ! empty( $key_skills ) ) {
-                            echo wpautop( $key_skills );
-                        } else {
-                            echo '<p>No key skills information available.</p>';
-                        }
-                        ?>
-                    </div>
-                </section>
-                
-                <section class="job-section">
-                    <h2 class="section-title">Why You'll Love Working Here</h2>
-                    <div class="section-content">
-                        <?php 
-                        $why_work = get_post_meta( get_the_ID(), '_why_work_here', true );
-                        if ( ! empty( $why_work ) ) {
-                            echo wpautop( $why_work );
-                        } else {
-                            echo '<p>No information available.</p>';
-                        }
-                        ?>
-                    </div>
-                </section>
-                
-                <section class="job-section">
-                    <h2 class="section-title">Location</h2>
-                    <div class="section-content">
-                        <?php if ( $job_location ) : ?>
-                            <p><?php echo esc_html( $job_location ); ?></p>
+    <div id="job-detail-page" class="job-detail-page">
+        <div class="container">
+            <!-- Breadcrumb Navigation -->
+            <nav class="job-breadcrumb">
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="breadcrumb-link">Home</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="<?php echo esc_url(home_url('/jobs')); ?>" class="breadcrumb-link">All Jobs</a>
+                <span class="breadcrumb-separator">/</span>
+                <span class="breadcrumb-current"><?php the_title(); ?></span>
+            </nav>
+
+            <!-- Job Header -->
+            <div class="job-header-card">
+                <div class="job-header-content">
+                    <figure class="company-logo-large">
+                        <?php if ($company_logo_url) : ?>
+                            <img src="<?php echo esc_url($company_logo_url); ?>" alt="<?php echo esc_attr($company_name); ?>" />
                         <?php else : ?>
-                            <p>No location information available.</p>
-                        <?php endif; ?>
-                    </div>
-                </section>
-            </div>
-            
-            <!-- Sidebar -->
-            <aside class="job-sidebar">
-                <!-- Staff Rating -->
-                <div class="sidebar-widget rating-widget">
-                    <h3 class="widget-title">Staff Rating</h3>
-                    <div class="rating-display">
-                        <?php 
-                        $full_stars = floor( $company_rating );
-                        $half_star = ( $company_rating - $full_stars ) >= 0.5;
-                        $empty_stars = 5 - $full_stars - ( $half_star ? 1 : 0 );
-                        
-                        for ( $i = 0; $i < $full_stars; $i++ ) {
-                            echo '<span class="star star-full">★</span>';
-                        }
-                        if ( $half_star ) {
-                            echo '<span class="star star-half">★</span>';
-                        }
-                        for ( $i = 0; $i < $empty_stars; $i++ ) {
-                            echo '<span class="star star-empty">★</span>';
-                        }
-                        ?>
-                        <span class="rating-number"><?php echo number_format( $company_rating, 1 ); ?></span>
-                    </div>
-                </div>
-                
-                <!-- Company Photos -->
-                <div class="sidebar-widget photos-widget">
-                    <h3 class="widget-title">Company Photos</h3>
-                    <div class="company-photos-grid">
-                        <?php if ( $company_photos && is_array( $company_photos ) ) : ?>
-                            <?php foreach ( $company_photos as $index => $photo_url ) : ?>
-                                <?php if ( $index < 4 ) : ?>
-                                    <div class="photo-item <?php echo ( $index === 3 ) ? 'photo-more' : ''; ?>">
-                                        <img src="<?php echo esc_url( $photo_url ); ?>" alt="Company Photo" />
-                                        <?php if ( $index === 3 && count( $company_photos ) > 4 ) : ?>
-                                            <div class="photo-overlay">+<?php echo count( $company_photos ) - 3; ?></div>
-                                        <?php endif; ?>
-                                    </div>
+                            <div class="company-logo-fallback">
+                                <?php if ($company_name) : ?>
+                                    <div class="company-name-in-logo"><?php echo esc_html($company_name); ?></div>
                                 <?php endif; ?>
-                            <?php endforeach; ?>
-                        <?php else : ?>
-                            <div class="photo-item">
-                                <div class="photo-placeholder">No photos available</div>
                             </div>
                         <?php endif; ?>
+                    </figure>
+
+                    <div class="job-header-info">
+                        <h1 class="job-title"><?php the_title(); ?></h1>
+                        <div class="job-meta-info">
+                            <span class="created-date">Created: <?php echo esc_html($created_date); ?></span>
+                        </div>
+                        <div class="job-tags">
+                            <?php if ($job_type_name) : ?>
+                                <span class="job-tag job-type"><?php echo esc_html($job_type_name); ?></span>
+                            <?php endif; ?>
+                            <?php if ($job_category_name) : ?>
+                                <span class="job-tag job-category"><?php echo esc_html($job_category_name); ?></span>
+                            <?php endif; ?>
+                            <?php if ($job_location) : ?>
+                                <span class="job-tag job-location"><?php echo esc_html($job_location); ?></span>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-            </aside>
+
+                <div class="job-header-actions">
+                    <button class="btn-share">SHARE</button>
+                    <button class="btn-apply">APPLY JOB</button>
+                </div>
+            </div>
+
+            <!-- Job Content with Sidebar -->
+            <div class="job-content-wrapper">
+                <!-- Main Content -->
+                <div class="job-main-content">
+                    <section class="job-section">
+                        <h2 class="section-title">Overview about Company</h2>
+                        <div class="section-content">
+                            <?php
+                            $content = get_the_content();
+                            if (! empty($content)) {
+                                echo wpautop($content);
+                            } else {
+                                echo '<p>No company overview available.</p>';
+                            }
+                            ?>
+                        </div>
+                    </section>
+
+                    <section class="job-section">
+                        <h2 class="section-title">Our Key Skills</h2>
+                        <div class="section-content">
+                            <?php
+                            $key_skills = get_post_meta(get_the_ID(), '_key_skills', true);
+                            if (! empty($key_skills)) {
+                                echo wpautop($key_skills);
+                            } else {
+                                echo '<p>No key skills information available.</p>';
+                            }
+                            ?>
+                        </div>
+                    </section>
+
+                    <section class="job-section">
+                        <h2 class="section-title">Why You'll Love Working Here</h2>
+                        <div class="section-content">
+                            <?php
+                            $why_work = get_post_meta(get_the_ID(), '_why_work_here', true);
+                            if (! empty($why_work)) {
+                                echo wpautop($why_work);
+                            } else {
+                                echo '<p>No information available.</p>';
+                            }
+                            ?>
+                        </div>
+                    </section>
+
+                    <section class="job-section">
+                        <h2 class="section-title">Location</h2>
+                        <div class="section-content">
+                            <?php if ($job_location) : ?>
+                                <p><?php echo esc_html($job_location); ?></p>
+                            <?php else : ?>
+                                <p>No location information available.</p>
+                            <?php endif; ?>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="job-sidebar">
+                    <!-- Staff Rating -->
+                    <div class="sidebar-widget rating-widget">
+                        <h3 class="widget-title">Staff Rating</h3>
+                        <div class="rating-display">
+                            <?php
+                            $full_stars = floor($company_rating);
+                            $half_star = ($company_rating - $full_stars) >= 0.5;
+                            $empty_stars = 5 - $full_stars - ($half_star ? 1 : 0);
+
+                            for ($i = 0; $i < $full_stars; $i++) {
+                                echo '<span class="star star-full">★</span>';
+                            }
+                            if ($half_star) {
+                                echo '<span class="star star-half">★</span>';
+                            }
+                            for ($i = 0; $i < $empty_stars; $i++) {
+                                echo '<span class="star star-empty">★</span>';
+                            }
+                            ?>
+                            <span class="rating-number"><?php echo number_format($company_rating, 1); ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Company Photos -->
+                    <div class="sidebar-widget photos-widget">
+                        <h3 class="widget-title">Company Photos</h3>
+                        <div class="company-photos-grid">
+                            <?php if ($company_photos && is_array($company_photos)) : ?>
+                                <?php foreach ($company_photos as $index => $photo_url) : ?>
+                                    <?php if ($index < 4) : ?>
+                                        <div class="photo-item <?php echo ($index === 3) ? 'photo-more' : ''; ?>">
+                                            <img src="<?php echo esc_url($photo_url); ?>" alt="Company Photo" />
+                                            <?php if ($index === 3 && count($company_photos) > 4) : ?>
+                                                <div class="photo-overlay">+<?php echo count($company_photos) - 3; ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <div class="photo-item">
+                                    <div class="photo-placeholder">No photos available</div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </aside>
+            </div>
         </div>
     </div>
-</div>
+    <!-- Other Jobs Section -->
+    <div class="other-jobs-section">
+        <h2 class="other-jobs-title">Other Jobs</h2>
 
-<style>
-.entry-header{
-	display: none;
-}
-.job-detail-page {
-    padding: 40px 0 60px;
-    background: #f5f5f5;
-}
+        <div class="other-jobs-grid">
+            <?php
+            // Lấy category của job hiện tại
+            $current_job_id = get_the_ID();
+            $terms = get_the_terms($current_job_id, 'job_listing_category');
 
-.job-detail-page .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
+            $category_ids = [];
+            if ($terms && ! is_wp_error($terms)) {
+                foreach ($terms as $term) {
+                    $category_ids[] = $term->term_id;
+                }
+            }
 
-/* Breadcrumb Navigation */
-.job-breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 25px;
-    padding: 15px 0;
-    font-size: 14px;
-}
+            // Query các job khác
+            $args = [
+                'post_type'      => 'job_listing',
+                'posts_per_page' => 4,
+                'post__not_in'   => [$current_job_id],
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+            ];
 
-.breadcrumb-link {
-    color: #666;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+            if (! empty($category_ids)) {
+                $args['tax_query'] = [
+                    [
+                        'taxonomy' => 'job_listing_category',
+                        'field'    => 'term_id',
+                        'terms'    => $category_ids,
+                    ]
+                ];
+            }
 
-.breadcrumb-link:hover {
-    color: #ff6b35;
-}
+            $other_jobs = new WP_Query($args);
 
-.breadcrumb-separator {
-    color: #999;
-}
+            if ($other_jobs->have_posts()) :
+                while ($other_jobs->have_posts()) : $other_jobs->the_post();
+                    $company_logo = get_the_company_logo(get_the_ID(), 'thumbnail');
+                    $job_location = get_the_job_location();
+                    $job_type = wpjm_get_the_job_types();
+            ?>
+                    <div class="other-job-card">
+                        <a href="<?php the_permalink(); ?>" class="other-job-link">
+                            <div class="other-job-header">
+                                <?php if ($company_logo) : ?>
+                                    <img src="<?php echo esc_url($company_logo); ?>" alt="" class="other-job-logo">
+                                <?php else : ?>
+                                    <div class="other-job-logo placeholder">Logo</div>
+                                <?php endif; ?>
 
-.breadcrumb-current {
-    color: #333;
-    font-weight: 500;
-}
+                                <div class="other-job-info">
+                                    <h3 class="other-job-title"><?php the_title(); ?></h3>
 
-/* Job Header Card */
-.job-header-card {
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 30px;
-}
+                                    <?php if (! empty($job_type)) : ?>
+                                        <span class="other-job-type">
+                                            <?php echo esc_html($job_type[0]->name); ?>
+                                        </span>
+                                    <?php endif; ?>
 
-.job-header-content {
-    display: flex;
-    gap: 25px;
-    flex: 1;
-}
+                                    <?php if ($job_location) : ?>
+                                        <span class="other-job-location">
+                                            <?php echo esc_html($job_location); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+            <?php
+                endwhile;
+            else :
+                echo '<p>No other jobs available.</p>';
+            endif;
+            wp_reset_postdata();
+            ?>
+        </div>
+    </div>
 
-.company-logo-large {
-    flex-shrink: 0;
-    margin: 0;
-    width: 130px;
-    height: 130px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 15px;
-    background: #fff;
-}
 
-.company-logo-large img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
+    <style>
+        /* OTHER JOBS Section */
+        .other-jobs-section {
+            margin-top: 50px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
 
-.company-logo-fallback {
-    width: 100%;
-    height: 100%;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-}
+        .other-jobs-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #333;
+        }
 
-.company-name-in-logo {
-    font-size: 14px;
-    font-weight: 600;
-    color: #666;
-    text-align: center;
-    padding: 10px;
-}
+        .other-jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
 
-.job-header-info {
-    flex: 1;
-}
+        .other-job-card {
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
 
-.job-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0 0 10px 0;
-    color: #333;
-    line-height: 1.3;
-}
+        .other-job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
 
-.job-meta-info {
-    margin-bottom: 15px;
-}
+        .other-job-link {
+            text-decoration: none;
+            color: inherit;
+        }
 
-.created-date {
-    font-size: 14px;
-    color: #999;
-}
+        .other-job-header {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
 
-.job-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
+        .other-job-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: contain;
+            border: 1px solid #e5e5e5;
+            background: #fff;
+        }
 
-.job-tag {
-    display: inline-block;
-    padding: 6px 14px;
-    font-size: 13px;
-    border-radius: 4px;
-    background: #e9ecef;
-    color: #495057;
-    line-height: 1.4;
-    height: fit-content;
-}
+        .other-job-logo.placeholder {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
 
-.job-tag.job-type {
-    background: #d1ecf1;
-    color: #0c5460;
-}
+        .other-job-info .other-job-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin: 0 0 5px;
+        }
 
-.job-tag.job-category {
-    background: #d4edda;
-    color: #155724;
-}
+        .other-job-type,
+        .other-job-location {
+            display: inline-block;
+            font-size: 13px;
+            margin-right: 8px;
+            color: #777;
+        }
 
-.job-tag.job-location {
-    background: #fff3cd;
-    color: #856404;
-}
+        /* Responsive */
+        @media (max-width: 768px) {
+            .other-jobs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-.job-header-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+        .entry-header {
+            display: none;
+        }
 
-.btn-share,
-.btn-apply {
-    padding: 12px 35px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-}
+        .job-detail-page {
+            padding: 40px 0 60px;
+            background: #f5f5f5;
+        }
 
-.btn-share {
-    background: transparent;
-    border: 2px solid #333;
-    color: #333;
-}
+        .job-detail-page .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
 
-.btn-share:hover {
-    background: #333;
-    color: #fff;
-}
+        /* Breadcrumb Navigation */
+        .job-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 15px 0;
+            font-size: 14px;
+        }
 
-.btn-apply {
-    background: transparent;
-    border: 2px solid #ff6b35;
-    color: #ff6b35;
-}
+        .breadcrumb-link {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
 
-.btn-apply:hover {
-    background: #ff6b35;
-    color: #fff;
-}
+        .breadcrumb-link:hover {
+            color: #ff6b35;
+        }
 
-/* Job Content with Sidebar */
-.job-content-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 30px;
-}
+        .breadcrumb-separator {
+            color: #999;
+        }
 
-.job-main-content {
-    background: #fff;
-    padding: 35px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+        .breadcrumb-current {
+            color: #333;
+            font-weight: 500;
+        }
 
-.job-section {
-    margin-bottom: 40px;
-}
+        /* Job Header Card */
+        .job-header-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+        }
 
-.job-section:last-child {
-    margin-bottom: 0;
-}
+        .job-header-content {
+            display: flex;
+            gap: 25px;
+            flex: 1;
+        }
 
-.section-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0 0 20px 0;
-    color: #333;
-}
+        .company-logo-large {
+            flex-shrink: 0;
+            margin: 0;
+            width: 130px;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fff;
+        }
 
-.section-content {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #666;
-}
+        .company-logo-large img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
 
-.section-content p {
-    margin-bottom: 15px;
-}
+        .company-logo-fallback {
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
 
-/* Sidebar */
-.job-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
+        .company-name-in-logo {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-align: center;
+            padding: 10px;
+        }
 
-.sidebar-widget {
-    background: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+        .job-header-info {
+            flex: 1;
+        }
 
-.widget-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 20px 0;
-    color: #333;
-}
+        .job-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #333;
+            line-height: 1.3;
+        }
 
-/* Rating Widget */
-.rating-display {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+        .job-meta-info {
+            margin-bottom: 15px;
+        }
 
-.star {
-    font-size: 28px;
-    color: #ddd;
-}
+        .created-date {
+            font-size: 14px;
+            color: #999;
+        }
 
-.star.star-full {
-    color: #ff6b35;
-}
+        .job-tags {
+            display: flex;
+            flex-wrap: wrap;
+        }
 
-.star.star-half {
-    color: #ff6b35;
-    opacity: 0.5;
-}
+        .job-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            font-size: 13px;
+            height: fit-content;
+        }
 
-.rating-number {
-    font-size: 24px;
-    font-weight: 700;
-    color: #ff6b35;
-    margin-left: 10px;
-}
+        .job-tag.job-type {
+            background: #e9ecef;
+            color: #666;
 
-/* Company Photos */
-.company-photos-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
+        }
 
-.photo-item {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 8px;
-    overflow: hidden;
-}
+        .job-tag.job-category {
+            background: #e9ecef;
+            color: #666;
+        }
 
-.photo-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+        .job-tag.job-location {
+            background: #e9ecef;
+            color: #666;
+        }
 
-.photo-item.photo-more {
-    position: relative;
-}
+        .job-tag.job-type::after {
+            content: "";
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
 
-.photo-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 32px;
-    font-weight: 700;
-}
 
-.photo-placeholder {
-    width: 100%;
-    height: 100%;
-    background: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #999;
-    font-size: 13px;
-    text-align: center;
-    padding: 10px;
-}
+            width: 1px;
+            height: 12px;
+            background-color: #ccc;
+        }
 
-/* Responsive */
-@media (max-width: 992px) {
-    .job-content-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    .job-sidebar {
-        order: -1;
-    }
-}
+        .job-header-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-@media (max-width: 768px) {
-    .job-header-card {
-        flex-direction: column;
-    }
-    
-    .job-header-content {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .job-header-actions {
-        width: 100%;
-    }
-    
-    .btn-share,
-    .btn-apply {
-        width: 100%;
-    }
-    
-    .job-tags {
-        justify-content: center;
-    }
-}
+        .btn-share,
+        .btn-apply {
+            padding: 12px 35px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
 
-@media (max-width: 576px) {
-    .job-main-content {
-        padding: 20px;
-    }
-    
-    .job-title {
-        font-size: 20px;
-    }
-    
-    .section-title {
-        font-size: 18px;
-    }
-}
-</style>
+        .btn-share {
+            background: transparent;
+            border: 2px solid #333;
+            color: #333;
+        }
+
+        .btn-share:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-apply {
+            background: transparent;
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+        }
+
+        .btn-apply:hover {
+            background: #ff6b35;
+            color: #fff;
+        }
+
+        /* Job Content with Sidebar */
+        .job-content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        .job-main-content {
+            background: #fff;
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-section {
+            margin-bottom: 40px;
+        }
+
+        .job-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        .section-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        .section-content p {
+            margin-bottom: 15px;
+        }
+
+        /* Sidebar */
+        .job-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-widget {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .widget-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        /* Rating Widget */
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 28px;
+            color: #ddd;
+        }
+
+        .star.star-full {
+            color: #ff6b35;
+        }
+
+        .star.star-half {
+            color: #ff6b35;
+            opacity: 0.5;
+        }
+
+        .rating-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-left: 10px;
+        }
+
+        /* Company Photos */
+        .company-photos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-item.photo-more {
+            position: relative;
+        }
+
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .job-content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .job-sidebar {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .job-header-card {
+                flex-direction: column;
+            }
+
+            .job-header-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .job-header-actions {
+                width: 100%;
+            }
+
+            .btn-share,
+            .btn-apply {
+                width: 100%;
+            }
+
+            .job-tags {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .job-main-content {
+                padding: 20px;
+            }
+
+            .job-title {
+                font-size: 20px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+        }
+    </style>
 
 <?php
 endwhile; // End of the loop.

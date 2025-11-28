@@ -9767,3 +9767,102 @@ h2.entry-title a {
   transform: rotate(45deg) translate(16px, -10px);
 }
 /* End Job Card Container */
+
+/* 1. Cấu trúc chung: Nền xám nhạt, căn giữa toàn bộ */
+.footer-wrapper-v2 {
+    background-color: #f5f5f5; 
+    padding: 50px 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.footer-container-v2 {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px; 
+}
+
+/* 2. Logo */
+.footer-logo-v2 a {
+    text-decoration: none;
+}
+.footer-logo-v2 h3 {
+    color: #000;
+    padding: 10px 30px;
+    margin: 0;
+    display: inline-block;
+}
+
+/* 3. Menu */
+.footer-menu-v2 ul.footer-nav-list-v2 {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px; 
+}
+
+.footer-menu-v2 ul.footer-nav-list-v2 li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase; 
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: color 0.3s;
+}
+
+/* 4. Social Icons */
+.footer-social-v2 {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Khoảng cách giữa các icon */
+}
+
+.social-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Làm tròn */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: opacity 0.3s;
+    font-size: 18px;
+}
+
+.social-item:hover {
+    opacity: 0.8;
+}
+
+/* Màu sắc từng icon */
+/* Facebook - Xanh đậm */
+.social-item.fb {
+    background-color: #3b5998;
+    color: #fff;
+}
+
+/* Google - Nền trắng, icon màu (hoặc nền trắng viền xám) */
+/* Trong ảnh mẫu là nền trắng logo màu, nhưng để đơn giản ta làm nền trắng icon cam/đỏ */
+.social-item.gg {
+    background-color: #fff;
+    color: #db4437;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ cho nổi */
+}
+
+/* Line - Xanh lá */
+.social-item.line {
+    background-color: #00c300;
+    color: #fff;
+}
+
+/* Twitter - Xanh dương nhạt */
+.social-item.tw {
+    background-color: #1da1f2;
+    color: #fff;
+}

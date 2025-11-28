@@ -541,30 +541,40 @@ if (! function_exists('jobscout_header')) :
         if (! function_exists('jobscout_footer_top')) :
             function jobscout_footer_top()
             { ?>
-        <div class="footer-t">
-            <div class="container flex-footer">
-                <!-- Logo -->
-                <div class="footer-logo">
+        <div class="footer-wrapper-v2">
+            <div class="footer-container-v2">
+
+                <div class="footer-logo-v2">
                     <a href="<?php echo esc_url(home_url('/')); ?>">
-                        <?php bloginfo('name'); ?>
+                        <h3><?php bloginfo('name'); ?></h3>
                     </a>
                 </div>
 
-                <!-- Menu -->
-                <div class="footer-menu">
+                <div class="footer-menu-v2">
                     <?php
                     wp_nav_menu(array(
                         'theme_location' => 'primary',
-                        'menu_class' => 'footer-nav',
-                        'container' => false,
+                        'menu_class'     => 'footer-nav-list-v2', // Class riêng cho ul
+                        'container'      => false,
                     ));
                     ?>
                 </div>
 
-                <!-- Social Icons -->
-                <div class="footer-social">
-                    <?php dynamic_sidebar('footer-social-sidebar'); ?>
+                <div class="footer-social-v2">
+                    <a href="#" class="social-item fb">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-item gg">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-item line">
+                        <i class="fab fa-line"></i>
+                    </a>
+                    <a href="#" class="social-item tw">
+                        <i class="fab fa-twitter"></i>
+                    </a>
                 </div>
+
             </div>
         </div>
     <?php }
