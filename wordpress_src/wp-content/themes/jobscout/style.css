@@ -9511,3 +9511,50 @@ h2.entry-title a {
 .search_location::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f36918' width='24' height='24'%3E%3Cpath d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'/%3E%3C/svg%3E");
 }
+
+.blog-grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.blog-grid-item {
+  background: #fff;
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.blog-thumbnail img {
+  width: 180px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.blog-content .blog-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.blog-excerpt {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.read-more {
+  color: #e74c3c;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.blog-grid {
+  max-width: 1200px;
+  margin: auto;
+}
