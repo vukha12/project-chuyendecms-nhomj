@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Creating a custom job search form for homepage
@@ -9,63 +10,36 @@
  * @package JobScout
  */
 $find_a_job_link = get_option('job_manager_jobs_page_id', 0);
-$post_slug = get_post_field('post_name', $find_a_job_link);
+$post_slug       = get_post_field('post_name', $find_a_job_link);
 $ed_job_category = get_option('job_manager_enable_categories');
 
-if ($post_slug) {
-    $action_page = home_url('/' . $post_slug);
-} else {
-    $action_page = home_url('/');
-}
+$action_page = home_url('/jobs/');
 ?>
 
 <div class="job_listings">
 
-    <form class="jobscout_job_filters" method="GET" action="http://localhost/CMS-CuoiKy/jobs">
+    <form class="jobscout_job_filters" method="GET" action="<?php echo esc_url($action_page) ?>">
         <div class="search_jobs">
 
             <div class="search_keywords">
                 <label for="search_keywords"><?php esc_html_e('Keywords', 'jobscout'); ?></label>
-                <div class="input-wrapper">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                              d="M10 2a8 8 0 015.29 13.71l4.5 4.5-1.42 1.42-4.5-4.5A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/>
-                    </svg>
-
-
-                    <input type="text" id="search_keywords" name="search_keywords"
-                           placeholder="<?php esc_attr_e('Tìm kiếm theo công việc, công ty, kỹ năng', 'jobscout'); ?>">
-                </div>
+                <input type="text" id="search_keywords" name="search_keywords" placeholder="<?php esc_attr_e('Search for jobs, companies, skills', 'jobscout'); ?>">
             </div>
 
-            <div class="search_location">
-                <label for="search_location"><?php esc_html_e('Location', 'jobscout'); ?></label>
-                <div class="input-wrapper">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                              d="M12 2a7 7 0 00-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 00-7-7zm0 9.5a2.5 2.5 0 112.5-2.5 2.5 2.5 0 01-2.5 2.5z"/>
-                    </svg>
-                    <select id="search_location" name="search_location">
-                        <option value=""><?php esc_html_e('Tất cả địa điểm', 'jobscout'); ?></option>
-                        <?php
-                        global $wpdb;
-                        $locations = $wpdb->get_col("
-        SELECT DISTINCT meta_value 
-        FROM {$wpdb->postmeta}
-        WHERE meta_key = '_job_location'
-        AND meta_value != ''
-        ORDER BY meta_value ASC
-    ");
+            <div class="search_location change">
+                <?php
+                global $wpdb;
+                $table  = $wpdb->prefix . 'postmeta';
+                $sql = "SELECT DISTINCT SUBSTRING_INDEX(`meta_value`,',',-1) as location FROM `wp_postmeta` WHERE `meta_key` like '%location%' ORDER BY location";
+                $data = $wpdb->get_results($wpdb->prepare($sql));
+                ?>
 
-                        if (!empty($locations)) {
-                            foreach ($locations as $loc) {
-                                printf('<option value="%1$s">%2$s</option>', esc_attr($loc), esc_html($loc));
-                            }
-                        }
-                        ?>
-                    </select>
-
-                </div>
+                <select id="search_location" name="search_location" value="Khu vực">
+                    <option value="">Khu vực</option>
+                    <?php foreach ($data as $value) : ?>
+                        <option value="<?php echo $value->location; ?>"><?php echo $value->location; ?></option>
+                    <?php endforeach ?>
+                </select>
             </div>
 
             <?php if ($ed_job_category) { ?>
@@ -81,7 +55,7 @@ if ($post_slug) {
             <?php } ?>
 
             <div class="search_submit">
-                <input type="submit" value="<?php esc_attr_e('Tìm việc', 'jobscout'); ?>"/>
+                <input type="submit" value="<?php esc_attr_e('SEARCH JOB', 'jobscout'); ?>">
             </div>
 
         </div>
